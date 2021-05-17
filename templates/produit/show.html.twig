@@ -1,0 +1,63 @@
+{% extends "base.html.twig" %}
+
+{% block motsCles %}{{produit.titre}}{% endblock %}
+{% block description %}{{produit.description}}{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+            <div class="col-12">
+                <div >
+                    {% include "_panier.html.twig" %}
+                </div>
+                <div class="row">
+                    <div class="col-6">
+        
+                    {% if produit.filename is empty %}
+                        <div class="block_img">
+                            <img src="{{'/images/kite-orginal-pursa.jpg' }}" alt="Kit de l'Original Prusa" srcset="" style="width:100%; height: auto">
+                        </div>
+                        {% else %}
+                        <div class="block_img">
+                            <img class="" src="{{vich_uploader_asset(produit, 'imageFile')}}" alt="Kit de l'Original Prusa" srcset="" style="width:100%; height: auto">
+                        </div>
+                    {% endif %}
+                    </div>
+                    <div class="col-6">
+                        <h2 class="block_container_title">{{produit.titre}}</h2>
+                        <div class="block_container_referance">
+                            <span><strong class="block_container_referance_strong">Référence</strong> :  {{produit.reference}}</span>
+                        </div>
+                        <div class="block_container_etat">
+                            <span><strong class="block_container_referance_strong">État</strong> :  {{produit.etat}}</span>
+                        </div>
+                        <div class="block_container_etat">
+                            <span><strong class="block_container_referance_strong">Prix</strong> :  {{produit.formattedPrice }} €</span>
+                        </div>
+                        <div class="block_container_description">
+                            <p>
+                                {{produit.description}}
+                            </p>
+                        </div>
+                        {% if panier[produit.id] is not defined %}
+                            <form action="{{path('produit_ajouter', {id: produit.id})}}" method="GET">
+                                <select name="qte" class="col-2">
+                                    {% for i in 1..10 %}
+                                        <option value="{{ i }}">{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                                <div>
+                                    <button class="btn btn-primary">Ajouter au panier</button>
+                                </div>
+                            </form>
+                        {% else %}
+                            <div>
+                                <a href="" class="btn btn-primary">Le produit est déjà dans votre panier</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

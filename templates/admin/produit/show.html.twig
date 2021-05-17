@@ -1,0 +1,53 @@
+{% extends 'admin.base.html.twig' %}
+
+{% block title %}Produit{% endblock %}
+
+{% block body %}
+    <h1>Produit</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ produit.id }}</td>
+            </tr>
+            <tr>
+                <th>Titre</th>
+                <td>{{ produit.titre }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ produit.description }}</td>
+            </tr>
+            <tr>
+                <th>Disponible</th>
+                <td>{{ produit.disponible ? 'Oui' : 'Non' }}</td>
+            </tr>
+            <tr>
+                <th>Referance</th>
+                <td>{{ produit.reference }}</td>
+            </tr>
+            <tr>
+                <th>Etat</th>
+                <td>{{ produit.etat }}</td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td>{{ produit.formattedPrice }} €</td>
+            </tr>
+            <tr>
+                <th>Filename</th>
+                <td>
+                    {% if produit.filename %}
+                        <img src="{{vich_uploader_asset(produit, 'imageFile')}}" alt="" >
+                    {% endif %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('produit_index_admin') }}"class="btn btn-secondary">retour</a>
+
+    <a href="{{ path('produit_edit_admin', {'id': produit.id}) }}" class="btn btn-primary">Editer</a>
+
+{% endblock %}

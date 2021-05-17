@@ -1,0 +1,12 @@
+<p>
+    <a class="btn btn-primary" data-toggle="collapse" href="{{ path('produit_panier') }}" role="button" aria-expanded="false" aria-controls="collapseExample"> 
+        {% if articles == 0 %}
+            Aucun article dans votre panier
+        {% elseif articles == 1 %}
+            1 article dans votre panier
+        {% else %}
+            {{ articles }} articles dans votre panier
+        {% endif %}
+ 
+    </a>
+</p>

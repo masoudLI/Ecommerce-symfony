@@ -1,0 +1,99 @@
+
+/**
+ * banniere
+*/
+.banniere {
+    &_image {
+      margin-top: 35px;
+      width: 100%;
+      height: 400px;
+    }
+    &_icon_left, &_icon_right {
+      z-index: 999;
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background: #FFF url(../img/right.svg) center center no-repeat;
+      background-size: 20px 20px;
+      border-radius: 50%;
+      top: 50%;
+      margin-top: -20px;
+      right: 20px;
+      box-shadow: 0 15px 35px #3232321a, 0 5px 15px #0000001a;
+      cursor: pointer;
+      transition: transform 0.3s, opacity 0.3s;
+      animation: masuperanimationright 1s linear infinite;
+    }
+    &_icon_left {
+      background-image: url(../img/left.svg);
+      right: auto;
+      left: 20px;
+      animation: masuperanimationleft 1s linear infinite;
+    }
+}
+.block_top::first-letter {
+    margin-top: 30px;
+    font-size: 4rem;
+    color: #000;
+}
+  
+  
+@keyframes masuperanimationright {
+    0% {
+        @include transform(translateX(5%));
+    }
+    5% {
+        @include transform(translateX(10%));
+    }
+    }
+    @keyframes masuperanimationleft {
+    0% {
+        @include transform(translateX(-5%));
+    }
+    5% {
+        @include transform(translateX(-10%));
+    }
+}
+  
+  
+  
+@media (min-width: 540px) {
+    .banniere {
+        &_icon_left, &_icon_right {
+            top: 50%; 
+            right: 20px; 
+        }
+    }   
+}
+
+@media (min-width: 768px) {
+    .banniere {
+        &_icon_right, &_icon_left{
+            right: 5%; 
+        }
+        &_icon_left {
+            left: 5%;
+        }
+    }
+}
+@media (min-width: 960px) {
+    .banniere {
+        &_icon_right, &_icon_left{
+            right: 5%; 
+        }
+        &_icon_left {
+            left: 5%;
+        }
+    }
+}
+@media (min-width: 1140px) {
+    .banniere {
+        &_icon_right, &_icon_left {
+            right: 5%; 
+        }
+        &_icon_left {
+            left: 5%;
+        }
+    }
+}
+  

@@ -1,0 +1,28 @@
+<div class="block_container col-sm-12 col-md-6 col-lg-6 col-xl-6" id="js-block_container" tabindex="1">
+  {% if produit.filename %}
+    <div class="block_img">
+      <img class="block_container_image" src="{{vich_uploader_asset(produit, 'imageFile')}}" alt="Kit de l'Original Prusa">
+    </div>
+  {% else %}
+    <div class="block_img">
+      <img class="block_container_image" src="/images/produits/kite-orginal-pursa.jpg" alt="Kit de l'Original Prusa">
+    </div>
+  {% endif %}
+
+  <div class="block_container_body">
+    <h2 class="block_container_title">{{produit.titre}}</h2>
+    <div class="block_container_description">
+      <p>
+        {{produit.description | excerpt}}
+      </p>
+    </div>
+    <div class="caption">
+      <p>{{produit.formattedPrice }}
+        €</p>
+      <a class="btn btn-primary" href="{{ path('produit_show', {slug: produit.slug, id: produit.id} )}}">Plus d'infos</a>
+      {% if panier[produit.id] is not defined %}
+        <a class="btn btn-success" href="{{ path('produit_ajouter', {id: produit.id} )}}">Ajouter au panier</a>
+      {% endif %}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,12 @@
+{% extends 'admin.base.html.twig' %}
+
+{% block title %}Editer Produit{% endblock %}
+
+{% block body %}
+    <h1>Editer le produit</h1>
+
+    {{ include('admin/produit/_form.html.twig', {button: 'Editer'}) }}
+
+    <a href="{{ path('produit_index_admin') }}" class="btn btn-secondary">retour</a>
+
+{% endblock %}

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Imprimante 3D!{% endblock %}</title>
+    <meta name="language" content="fr" />
+    <meta property="og:url" content="https://www.printing.fr/accueil" />
+    <meta name="author" content="printing.fr" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Imprimante 3D" />
+    <link href="{{ asset('css/fontawesome.min.css') }}" rel="stylesheet">
+    <link href="{{asset('css/solid.min.css')}}" rel="stylesheet">
+    <link href="{{asset('css/style.css')}}" rel="stylesheet">
+    <link href="{{asset('css/contact.css')}}" rel="stylesheet">
+    <link href="{{asset('css/produit.css')}}" rel="stylesheet">
+    <link href="{{asset('css/mention.css')}}" rel="stylesheet">
+
+    <script src="{{asset('js/app.js')}}" async></script> 
+    <script src="{{asset('js/contact.js')}}" async></script> 
+    <script src="{{asset('js/produit.js')}}" async></script> 
+    {% block stylesheets %}
+        <style>
+            @media (min-width: 768px) {
+                .active_menu {
+                    border-bottom: 2px solid!important;
+                    color: #000!important;
+                }
+            }
+            .site {
+                overflow: hidden;
+            }
+        </style>
+    {% endblock %}
+    </head>
+    <body>
+        <div class="site">
+        <header>
+            <div class="topbar row col-md-12 ">
+                <a href="#" class="topbar_icon" id="js_icon"><span class="topbar_icon_span"></span></a>
+                <div class="col-md-4 topbar_logo">
+                <a href="{{path('produit_index')}}">
+                    <img class="topbar_image" src="{{asset('img/Logo-imprimante_tr.png')}}" alt="logo-de-printing-3D">
+                </a>
+                </div>  
+                <nav class="col-md-8 topbar_menu"> 
+                    <ul class="topbar_menu_list">
+                        <li class="topbar_menu_list_item">
+                            <a href="{{path('produit_index_admin')}}" class="topbar_menu_list_A">Administration</a>
+                        </li>
+                        <li class="topbar_menu_list_item">
+                            <a href="{{path('produit_index_admin')}}" class="topbar_menu_list_A {% if current_menu is defined and current_menu == 'produits' %}active_menu{% endif %}">Produits</a>
+                        </li>
+                        
+                    </ul> 
+                </nav>
+            </div>
+        </header>
+        <div class="container mt-4">
+
+            {% for message in app.flashes('danger') %}
+                <div class="alert alert-danger">
+                {{ message }}
+                </div>
+            {% endfor %}
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success">
+                {{ message }}
+                </div>
+            {% endfor %}
+
+            {% block body %}{% endblock %}
+        </div>
+        <hr />
+        <footer id="footer" class="vspace20">
+            <div class="row">
+                <div class="col-sm-12 col-md-4">
+                    <h2 class="footer_title">Dernières News</h2>
+                    <div class="footer_list">
+                        <div class="footer_list_item"><i class="fas fa-quote-left footer_list_icon"></i>Symfony se dote d'un système de notification instantanée basé sur les Server-sent events </div>
+                        <div class="footer_list_item "><i class="fas fa-quote-left footer_list_icon"></i>J'adorerais avoir des "null safe call" en PHP, surtout quand sur symfony on fait</div>
+                        <div class="footer_list_item "><i class="fas fa-quote-left footer_list_icon"></i>Présentation du générateur d'administration de Laravel, Laravel </div>
+                    </div>
+                </div>
+                <div class="footer_col col-sm-12 col-md-4"> 
+                    <a class="footer_lien" href="" title="facebook">
+                        <img class="footer_image" src="img/facebook.png" alt="">
+                    </a>
+                    <a class="footer_lien" href="" title="twiter">
+                        <img class="footer_image" src="img/twiter.jpg" alt="">
+                    </a>
+                    <a class="footer_lien" href="" title="linked">
+                        <img class="footer_image" src="img/link.jpg" alt="">
+                    </a>
+                </div>
+                <div class="footer_search col-sm-12 col-md-4 col-lg-4">
+                    <form class="form-inline my-2 my-lg-0">
+                        <input class="form-control mr-sm-2 footer_input" type="search" placeholder="Search" aria-label="Search">
+                        <div class="footer_button">
+                            <button type="submit"><i class="fas fa-search footer_search_icon"></i></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </footer>	
+    </div>
+    </body>
+</html>

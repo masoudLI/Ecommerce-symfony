@@ -1,0 +1,150 @@
+{% extends "base.html.twig" %}
+
+{% block stylesheets %}
+  <style>
+    .MyCardElement {
+      height: 40px;
+      padding: 10px 12px;
+      width: 100%;
+      color: #32325d;
+      background-color: white;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      box-shadow: 0 1px 3px 0 #e6ebf1;
+      -webkit-transition: box-shadow 150ms ease;
+      transition: box-shadow 150ms ease;
+    }
+    .MyCardElement--focus {
+      box-shadow: 0 1px 3px 0 #cfd7df;
+    }
+    .MyCardElement--invalid {
+      border-color: #fa755a;
+    }
+    .MyCardElement--webkit-autofill {
+      background-color: #fefde5 !important;
+    }
+  </style>
+{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <h2>
+          Acheter
+          {% if articles == 1 %}
+            votre produit
+          {% elseif articles > 1 %}
+            vos produits
+          {% endif %}
+        </h2>
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Références</th>
+              <th>Quantité</th>
+              <th>Prix unitaire</th>
+              <th>Total HT</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for produit in commande.commande.produit %}
+              <tr>
+                <td>{{ produit.reference }}</td>
+                <td>
+                  {{ produit.quantite }}
+                </td>
+                <td>{{ produit.prixHT }}
+                  €</td>
+                <td>{{ produit.prixHT * produit.quantite }}
+                  €</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <dl class="dl-horizontal pull-right">
+          <dt>Total HT :</dt>
+          <dd>{{ commande.commande.prixHT }}
+            €</dd>
+        </dl>
+        <div class="clearfix">
+          <h2>Informations de la carte</h2>
+          <form action={{path('validationCommande', {id: commande.id})}} id="subscription-form" method="POST">
+            <div id="card-element" class="MyCardElement">
+              <!-- Elements will create input elements here -->
+            </div>
+
+            <!-- We'll put the error messages in this element -->
+            <div id="card-errors" role="alert"></div>
+
+            <h3>Adresse de facturation</h3>
+
+            <input placeholder="Ville" name="city" type="text" class="input_city"/>
+            <select name="country" class="input_country" placeholder="Pays"> 
+            <pre>
+              {{ dump(app.user.countries) }}
+            </pre>
+              {% for key, country in app.user.countries %}
+                <option value={{key}}>{{ country}}</option>
+              {% endfor %}
+            </select>
+            <input placeholder="Address ligne 1" name="address1" type="text" class="input_address1"/>
+            <input placeholder="Address ligne 2" name="address" type="text" class="input_address2"/>
+            <input type="hidden" name="stripeToken" class="stripeToken"></input>
+            <button type="submit">Payer</button>
+          </form>
+          {#  <form action="{{ path('validationCommande', { 'id' : commande.id }) }}" method="POST"/>
+          <input name="prix" type="hidden" value="{{ commande.commande.prixHT }}"/>
+          <input name="date" type="hidden" value="{{ commande.createdat|date('dmyhms') }}"/>
+          <button type="submit" class="btn btn-success pull-right">Payer</button>
+        </form> #}
+          <a href="{{ path('produit_panier') }}" class="btn btn-primary pull-left">retour</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+
+  <script src="https://js.stripe.com/v3/"></script>
+  <script>
+    window.addEventListener('load', function () {
+      console.log('I\'m loading Stripe !!!!')
+      let stripe = Stripe('pk_test_DuXAPj9VX2bRENW50llmkpuO006SHcVC1R');
+      var elements = stripe.elements()
+      var style = {
+        base: {
+          color: '#32325d',
+          fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+          fontSmoothing: 'antialiased',
+          fontSize: '16px',
+          '::placeholder': {
+            color: '#aab7c4'
+          }
+        },
+        invalid: {
+          color: '#fa755a',
+          iconColor: '#fa755a'
+        }
+      }
+      var cardElement = elements.create('card', {style: style})
+      cardElement.mount('#card-element')
+      const form = document.getElementById('subscription-form')
+      form.addEventListener('submit', async (event) => {
+        // We don't want to let default form submission happen here,
+        // which would refresh the page.
+        event.preventDefault()
+        const {token, error} = await stripe.createToken(cardElement, {
+          "address_city": form.querySelector('.input_city').value,
+          "address_country": form.querySelector('.input_country').value,
+          "address_line1": form.querySelector('.input_address1').value,
+          "address_line2": form.querySelector('.input_address2').value,
+        });
+        console.log(token)
+        form.querySelector('.stripeToken').setAttribute('value', token.id)
+        form.submit()
+      })
+    })
+  </script>
+{% endblock %}

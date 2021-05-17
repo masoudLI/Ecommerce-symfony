@@ -1,0 +1,59 @@
+/**
+* container
+*/
+  
+.container_contact {
+    margin: 60px 30px;
+    .titre {
+        font-size: 1.2em;
+        font-weight: bold;
+        margin-bottom: 42px;
+    }
+    &_block {
+        background-color: #fff;
+        box-shadow: 0 1px 6px 6px rgba(0, 0, 0, 0.4);
+    }
+    &_form {
+        padding: 10px;
+        &_label {
+            font-size: 1.3rem;
+        }
+    }
+    &_button {
+        cursor: pointer;
+    }
+}
+.invalid {
+    display: block;
+	width: 50%;
+    margin-top: 0.25rem;
+    font-size: 80%;
+    color: #dc3545;
+}
+.valid{
+    box-shadow: 0 0 14px rgba(38, 212, 44, 0.75)
+}
+.input {
+    border: 2px solid #000000;
+    
+}
+
+@media (min-width:600px) {
+    .container_contact {
+        .titre {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 42px;
+        }
+        &_form {
+            padding: 30px;
+        }
+    }
+}
+@media (min-width:768px) {
+    .container_contact {
+        &_form {
+            padding: 110px;
+        }
+    }
+}

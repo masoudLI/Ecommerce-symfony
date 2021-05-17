@@ -1,0 +1,27 @@
+{{ form_start(form) }}
+<div class="row">
+  <div class="col-md-6">{{ form_row(form.titre) }}</div>
+  <div class="col-md-6">{{ form_row(form.reference) }}</div>
+  <div class="col-md-6">{{ form_row(form.etat) }}</div>
+  <div class="col-md-6">{{ form_row(form.price)}}</div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+      {% if produit.filename %}
+        <img src="{{vich_uploader_asset(produit, 'imageFile') | imagine_filter('my_thumb')}}" alt="">
+      {% endif %}
+  </div>
+  <div class="col-md-6">{{ form_row(form.imageFile) }}</div>
+</div>
+
+<div class="row" style="margin-top: 50px">
+  <div class="col-md-4">{{ form_row(form.disponible) }}</div>
+  <div class="col-md-8">{{ form_row(form.created_at) }}</div>
+  <div class="col-md-12">{{ form_row(form.description) }}</div>
+</div>
+
+
+{{ form_rest(form) }}
+<button class="btn btn-primary" >{{ button|default('Enregistrer') }}</button>
+{{ form_end(form) }}

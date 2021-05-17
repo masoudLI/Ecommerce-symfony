@@ -1,0 +1,25 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+  <section class="container">
+
+    <div class="row_container" id="js-container">
+      <div class="panier">
+        {% include "_panier.html.twig" %}
+        {% if app.user %}
+          {% include "_factures.html.twig" %}
+        {% endif %}
+      </div>
+      <div class="row">
+        {% for produit in produits %}
+          {% include "produit/_produit.html.twig" %}
+        {% endfor %}
+      </div>
+      <div class="navigation">
+        {{ knp_pagination_render(produits) }}
+      </div>
+    </div>
+  </section>
+
+{% endblock %}
