@@ -23,7 +23,7 @@ class StripeApi
         return $this->stripe->customers->create($data);
     }
 
-    public function getCustomer($customerId): Customer
+    public function getCustomer(string $customerId): Customer
     {
         return $this->stripe->customers->retrieve($customerId);
     }

@@ -21,12 +21,14 @@ class UserRepository extends ServiceEntityRepository
     }
 
     public function findCustomerForUser (User $user) {
-        return $this->createQueryBuilder('u')
+        $result =  $this->createQueryBuilder('u')
             ->setMaxResults(1)
+            ->select('u.stripeId as customer')
             ->where('u.stripeId = :stripeId')
             ->setParameter('stripeId', $user->getStripeId())
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getSingleResult();
+        return $result['customer'] ?? null;
     }
 
     // /**

@@ -11,8 +11,11 @@ use App\Repository\CommandeRepository;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\ProduitRepository;
 use App\Notification\ContactNotification;
+use App\Repository\AdresseRepository;
 use App\Services\Payement;
 use Doctrine\ORM\EntityManagerInterface;
+use Mpociot\VatCalculator\VatCalculator;
+use Stripe\Card;
 use Symfony\Component\HttpFoundation\Request;
 
 class CommandeController extends AbstractController
@@ -33,6 +36,7 @@ class CommandeController extends AbstractController
 
     private $notif;
 
+    private $repositoryAdresse;
 
     public function __construct(
         SessionInterface $session,
@@ -41,7 +45,8 @@ class CommandeController extends AbstractController
         TokenStorageInterface $tokenStorage,
         ProduitRepository $repository,
         Payement $payement,
-        ContactNotification $notif
+        ContactNotification $notif,
+        AdresseRepository $repositoryAdresse
     ) {
         $this->session = $session;
         $this->em = $em;
@@ -50,6 +55,7 @@ class CommandeController extends AbstractController
         $this->repository = $repository;
         $this->payement = $payement;
         $this->notif = $notif;
+        $this->repositoryAdresse = $repositoryAdresse;
     }
 
 
@@ -61,22 +67,52 @@ class CommandeController extends AbstractController
     private function facture()
     {
         $panier = $this->session->get('panier');
+        $adresse = $this->session->get('adresse');
         $commande = [];
         $totalHT = 0;
-        $produits = $this->repository->findArray(array_keys($this->session->get('panier')));
+        $totalTVA = 0;
 
+        $produits = $this->repository->findArray(array_keys($this->session->get('panier')));
+        $livraison = $this->repositoryAdresse->find($adresse['livraison']);
+        $facturation = $this->repositoryAdresse->find($adresse['facturation']);
+        $vatRate = (new VatCalculator())->getTaxRateForCountry('FR') ?: 0;        
         foreach ($produits as $produit) {
             $prixHT = ($produit->getPrice() * $panier[$produit->getId()]);
+            $prixTTC = floor($prixHT * ((100 + $vatRate) / 100));
             $totalHT += $prixHT;
+
+            $totalTVA += round($prixTTC - $prixHT, 2);
 
             $commande['produit'][$produit->getId()] = [
                 'reference' => $produit->getTitre(),
                 'quantite' => $panier[$produit->getId()],
                 'prixHT' => round($produit->getPrice(), 2),
+                'prixTTC' => round($prixHT, 2),
             ];
         }
-
+        $commande['livraison'] = [
+            'prenom'        => $livraison->getPrenom(),
+            'name'          => $livraison->getName(),
+            'phone'         => $livraison->getPhone(),
+            'adresse'       => $livraison->getAdresse(),
+            'cp'            => $livraison->getCp(),
+            'ville'         => $livraison->getVille(),
+            'pays'          => $livraison->getPays(),
+            'complement'    => $livraison->getComplement(),
+        ];
+        $commande['facturation'] = [
+            'prenom'        => $facturation->getPrenom(),
+            'name'          => $facturation->getName(),
+            'phone'         => $facturation->getPhone(),
+            'adresse'       => $facturation->getAdresse(),
+            'cp'            => $facturation->getCp(),
+            'ville'         => $facturation->getVille(),
+            'pays'          => $facturation->getPays(),
+            'complement'    => $facturation->getComplement(),
+        ];
+        
         $commande['prixHT'] = round($totalHT, 2);
+        $commande['prixTTC'] = round($totalHT + $totalTVA, 2);
         return $commande;
     }
 
@@ -90,26 +126,17 @@ class CommandeController extends AbstractController
      */
     public function prepareCommandeAction()
     {
-        $this->session->remove('commande');
-        if (!$this->session->has('commande')) {
+        $commande = $this->repositoryCommande->findOneBy(['user' => $this->getUser()]);
+        if ($commande === null) {
             $commande = new Commande();
-        } else {
-            $commande = $this->repositoryCommande->find($this->session->get('commande'));
-        }
-
-        $commande->setCreatedAt(new \DateTime());
-        $commande->setUser($this->getUser());
-        $commande->setValider(0);
-        $commande->setReference(0);
-        $commande->setCommande($this->facture());
-
-
-        if (!$this->session->has('commande')) {
+            $commande->setCreatedAt(new \DateTime());
+            $commande->setUser($this->getUser());
+            $commande->setValider(0);
+            $commande->setReference(0);
+            $commande->setCommande($this->facture());
             $this->em->persist($commande);
-            $this->session->set('commande', $commande);
+            $this->em->flush();
         }
-        $this->em->flush();
-
         return new Response($commande->getId());
     }
 

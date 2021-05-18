@@ -27,7 +27,6 @@ class Payement
 
     public function process($commande, User $user, string $token)
     {
-
         // Créer ou récupérer la card de l'utilisateur
         $card = $this->stripe->getCardFromToken($token);
 
@@ -42,14 +41,13 @@ class Payement
             $card = $this->string->createCardForCustomer($customer, $card);
         }
 
-       $this->stripe->createCharge([
+        $this->stripe->createCharge([
             "amount" => $price * 100,
             "currency" => "eur",
             "source" => $card->id,
             "customer" => $customer->id,
             "description" => "Achat sur monsite.com"
-        ]); 
-
+        ]);
     }
 
 

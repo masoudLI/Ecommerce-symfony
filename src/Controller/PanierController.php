@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\AdresseUser;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -144,14 +145,29 @@ class PanierController extends AbstractController
      * @Route("/validation", name="validation")
      * @return Response
      */
-    public function validationAction(CommandeController $prepareCommande)
+    public function validationAction(CommandeController $prepareCommande, Request $request)
     {
+        if (!$this->session->has('adresse')) {
+            $this->session->set('adresse', []);
+        }
+        $adresse = $this->session->get('adresse');
 
+        if (!$request->get('livraison') !== null && null !== $request->get('facturation')) {
+            $adresse['livraison']  = $request->get('livraison');
+            $adresse['facturation']  = $request->get('facturation');
+        }
+
+        $this->session->set('adresse', $adresse);
+        
         $prepareCommandeAction = $prepareCommande->prepareCommandeAction();
         $commande = $this->repositoryCommande->find($prepareCommandeAction->getContent());
+        $adresseLivraison = $this->getDoctrine()->getRepository(AdresseUser::class)->findOneBy(
+            ['user' => $this->getUser()]
+        );
         return $this->render('panier/validation.html.twig', [
             'commande' => $commande,
-            'articles' => count($this->session->get('panier'))
+            'articles' => count($this->session->get('panier')),
+            'adresseLivraison' => $adresseLivraison
         ]);
     }
 }

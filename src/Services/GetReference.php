@@ -8,7 +8,6 @@ class GetReference
 {
     private $objectManager;
 
-
     /**
      * __construct
      *
