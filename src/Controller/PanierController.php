@@ -104,7 +104,7 @@ class PanierController extends AbstractController
             }
         }
 
-        
+
         $this->session->set('panier', $panier);
         //dd($panier);
         return $this->redirectToRoute('produit_panier');
@@ -158,7 +158,7 @@ class PanierController extends AbstractController
         }
 
         $this->session->set('adresse', $adresse);
-        
+
         $prepareCommandeAction = $prepareCommande->prepareCommandeAction();
         $commande = $this->repositoryCommande->find($prepareCommandeAction->getContent());
         $adresseLivraison = $this->getDoctrine()->getRepository(AdresseUser::class)->findOneBy(

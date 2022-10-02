@@ -41,7 +41,7 @@ class Commande
      */
     private $user;
 
-   
+
 
     public function getId(): ?int
     {
@@ -107,8 +107,4 @@ class Commande
 
         return $this;
     }
-
-    
-
-   
 }

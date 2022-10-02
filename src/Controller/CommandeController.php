@@ -75,7 +75,7 @@ class CommandeController extends AbstractController
         $produits = $this->repository->findArray(array_keys($this->session->get('panier')));
         $livraison = $this->repositoryAdresse->find($adresse['livraison']);
         $facturation = $this->repositoryAdresse->find($adresse['facturation']);
-        $vatRate = (new VatCalculator())->getTaxRateForCountry('FR') ?: 0;        
+        $vatRate = (new VatCalculator())->getTaxRateForCountry('FR') ?: 0;
         foreach ($produits as $produit) {
             $prixHT = ($produit->getPrice() * $panier[$produit->getId()]);
             $prixTTC = floor($prixHT * ((100 + $vatRate) / 100));
@@ -110,7 +110,7 @@ class CommandeController extends AbstractController
             'pays'          => $facturation->getPays(),
             'complement'    => $facturation->getComplement(),
         ];
-        
+
         $commande['prixHT'] = round($totalHT, 2);
         $commande['prixTTC'] = round($totalHT + $totalTVA, 2);
         return $commande;
@@ -194,7 +194,7 @@ class CommandeController extends AbstractController
             $commande->setValider(true);
             $commande->setReference($this->reference()); //Service
             $this->em->flush();
-    
+
             $this->session->remove('panier');
             $this->session->remove('commande');
             // le mail de validation mais pas complaitement mis en place

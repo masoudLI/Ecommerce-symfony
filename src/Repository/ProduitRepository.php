@@ -48,7 +48,7 @@ class ProduitRepository extends ServiceEntityRepository
             ->where('p.id IN (:produits)')
             ->setParameter('produits', $produits)
             ->getQuery()
-            ->getResult();;
+            ->getResult();
     }
 
 

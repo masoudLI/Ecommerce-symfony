@@ -81,9 +81,9 @@
 			<dt>Total HT :</dt>
 			<dd>{{totalHT}}€</dd>
 			{# {% if vat %}	
-				<dt>Total TTC (TVA {{ vat | price_format('%') }})</dt>
-				<dd>{{(produit.price * (vat + 100) / 100)}}€</dd>
-			{% endif %} #}
+							<dt>Total TTC (TVA {{ vat | price_format('%') }})</dt>
+							<dd>{{(produit.price * (vat + 100) / 100)}}€</dd>
+						{% endif %} #}
 		</dl>
 		{% if app.user %}
 			<a href="{{path('validation')}}" class="btn btn-success pull-right">Valider mon panier</a>

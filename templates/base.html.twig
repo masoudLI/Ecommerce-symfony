@@ -63,7 +63,7 @@
                             <a href="{{path('produit_index')}}" class="topbar_menu_list_A {% if current_menu is defined and current_menu == 'produits' %}active_menu{% endif %}">Produits</a>
                         </li>
                         <li class="topbar_menu_list_item">
-                            <a href="{{ path('produit_panier') }}" class="topbar_menu_list_A {% if current_menu is defined and current_menu == 'panier' %}active_menu{% endif %}">Panier <i class="fas fa-shopping-basket"></i> {{articles is defined}}</a>
+                            <a href="{{ path('produit_panier') }}" class="topbar_menu_list_A {% if current_menu is defined and current_menu == 'panier' %}active_menu{% endif %}">Panier <i class="fas fa-shopping-basket"></i> {{articles is defined and articles > 0}}</a>
                         </li>
                         <li class="topbar_menu_list_item">
                             <a href="{{ path('commandes') }}" class="topbar_menu_list_A {% if current_menu is defined and current_menu == 'commandes' %}active_menu{% endif %}"> Mes commandes</a>
